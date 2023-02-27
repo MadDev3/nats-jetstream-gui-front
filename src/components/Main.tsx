@@ -41,12 +41,13 @@ ChartJS.register(
     Legend
 );
 
+
 const Main = () => {
 
     const [graphic, setGraphic] = useState<IMessage[]>([]);
 
     let sock: any = null;
-    let wsuri = "ws://localhost:80/ws";
+    let wsuri = "ws://localhost:8080/ws/";
 
     window.onload = function() {
 
@@ -64,6 +65,7 @@ const Main = () => {
 
         sock.onmessage = function(e: any) {
             const dataMessage: IData = JSON.parse(e.data);
+            console.log(dataMessage)
             if (dataMessage.type === 'statistic') {
                 let graphics = graphic;
                 graphics.push(dataMessage.message)
@@ -86,10 +88,10 @@ const Main = () => {
     }
 
     const ITEMS = [
-        {text: 'Consumers', count: 2, sub_text: 'total consumers'},
-        {text: 'Streams', count: 6, sub_text: 'total streams'},
-        {text: 'Messages', count: 3, sub_text: 'total messages'},
-        {text: 'Bytes', count: 24711, sub_text: 'total bytes'},
+        {text: 'Consumers', count: '?', sub_text: 'total consumers'},
+        {text: 'Streams', count: '?', sub_text: 'total streams'},
+        {text: 'Messages', count: '?', sub_text: 'total messages'},
+        {text: 'Bytes', count: '?', sub_text: 'total bytes'},
     ];
 
     const [items, setItems] = useState<IItem[]>(ITEMS);
@@ -107,7 +109,19 @@ const Main = () => {
 
     const labels = graphic.map(function (message, index) {
         let date = new Date(message.time * 1000);
-        return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        let hours: number | string = date.getHours();
+        if (hours < 10) {
+            hours = '0' + hours;
+        }
+        let minutes: number | string = date.getMinutes();
+        if (minutes < 10) {
+            minutes = '0' + minutes;
+        }
+        let seconds: number | string = date.getSeconds();
+        if (seconds < 10) {
+            seconds = '0' + seconds;
+        }
+        return hours + ':' + minutes + ':' + seconds;
     })
 
     const data = {
@@ -154,11 +168,8 @@ const Main = () => {
             legend: {
                 position: 'top' as const,
             },
-            title: {
-                display: true,
-                text: 'Chart.js Line Chart',
-            },
         },
+        maintainAspectRatio: false,
     };
 
     return (
