@@ -1,3 +1,101 @@
-.App {
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+.App {
+    font-family: 'Roboto', sans-serif;
+}
+
+.top_bar {
+    background-color: #00ACF1;
+    color: white;
+    font-size: 24px;
+    padding-left: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+main {
+    height: calc(100vh - 50px);
+    display: flex;
+}
+
+.left_bar {
+    background-color: #424242;
+    width: 70px;
+    height: 100%;
+}
+
+.main {
+    background-color: #303030;
+    padding: 10px;
+    flex: auto;
+}
+
+.item {
+    color: white;
+
+}
+
+.item__top {
+    background-color: #212121;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    font-size: 18px;
+}
+
+.item__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    background-color: #424242;
+    text-transform: uppercase;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.item__count {
+    font-size: 44px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.item__text {
+    font-size: 20px;
+}
+
+.new_messages {
+    margin-top: 10px;
+    color: white;
+}
+
+.new_messages__title {
+    background-color: #212121;
+    height: 50px;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.new_messages__content {
+    background-color: #424242;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle_time {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: white;
 }
