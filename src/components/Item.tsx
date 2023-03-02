@@ -1,10 +1,5 @@
 import React from 'react';
-
-interface IItem {
-    text: string;
-    count: number | string;
-    sub_text: string;
-}
+import {IItem} from "../interfaces";
 
 const Item = (props: IItem) => {
     return (

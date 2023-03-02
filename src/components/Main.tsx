@@ -11,25 +11,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-
-interface IItem {
-    text: string;
-    count: number | string;
-    sub_text: string;
-}
-
-interface IMessage {
-    bytes: number;
-    consumers: number;
-    messages: number;
-    streams: number;
-    time: number;
-}
-
-interface IData {
-    type: string;
-    message: IMessage;
-}
+import {IData, IGraphic, IItem} from "../interfaces";
 
 ChartJS.register(
     CategoryScale,
@@ -44,7 +26,7 @@ ChartJS.register(
 
 const Main = () => {
 
-    const [graphic, setGraphic] = useState<IMessage[]>([]);
+    const [graphic, setGraphic] = useState<IGraphic[]>([]);
 
     let sock: any = null;
     let wsuri = "ws://localhost:8080/ws/";
@@ -65,7 +47,6 @@ const Main = () => {
 
         sock.onmessage = function(e: any) {
             const dataMessage: IData = JSON.parse(e.data);
-            console.log(dataMessage)
             if (dataMessage.type === 'statistic') {
                 let graphics = graphic;
                 graphics.push(dataMessage.message)
@@ -96,7 +77,7 @@ const Main = () => {
 
     const [items, setItems] = useState<IItem[]>(ITEMS);
 
-    const itemsBlock = items.map(function (item: IItem, index) {
+    const itemsBlock = items.map(function (item, index) {
         return (
           <Item
               text={item.text}
