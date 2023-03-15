@@ -4,6 +4,7 @@ import LeftBar from "../components/LeftBar";
 import {useParams} from "react-router-dom";
 import {IMessage, IReadOptions, IStreamInfo} from "../interfaces";
 import ReadSendMessage from "../components/ReadSendMessage";
+import {CONSTANTS} from "../config";
 
 const StreamInfoPage = () => {
 
@@ -52,7 +53,7 @@ const StreamInfoPage = () => {
     }
 
     const readMessage = (options: IReadOptions) => {
-        fetch(`http://localhost:8080/read/?subject=${options.subject}`)
+        fetch(`${CONSTANTS.domain + CONSTANTS.read}?subject=${options.subject}`)
             .then(response => response.json())
             .then(message => {
                 if (message.error) {
@@ -63,7 +64,7 @@ const StreamInfoPage = () => {
     }
 
     const sendMessage = (options: IReadOptions) => {
-        fetch(`http://localhost:8080/send/?subject=${options.subject}&message=${options.message}`)
+        fetch(`${CONSTANTS.domain + CONSTANTS.read}?subject=${options.subject}&message=${options.message}`)
             .then(response => response.json())
             .then(message => {
                 console.log(message);
@@ -98,7 +99,7 @@ const StreamInfoPage = () => {
     const params = useParams();
 
     useEffect(() => {
-        fetch(`http://localhost:8080/stream_info/?stream=${params.streamName}`)
+        fetch(`${CONSTANTS.domain + CONSTANTS.streamInfo}?stream=${params.streamName}`)
             .then(response => response.json())
             .then(stream => {
                 if (stream.error) {

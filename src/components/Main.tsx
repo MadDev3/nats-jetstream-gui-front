@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Item from "./Item";
 import {Line} from "react-chartjs-2";
 import {
@@ -31,10 +31,7 @@ const Main = () => {
     let sock: any = null;
     let wsuri = "ws://localhost:8080/ws/";
 
-    window.onload = function() {
-
-        console.log("onload");
-
+    useEffect(() => {
         sock = new WebSocket(wsuri);
 
         sock.onopen = function() {
@@ -66,6 +63,10 @@ const Main = () => {
                 setItems(itemsData);
             }
         }
+    }, [])
+
+    window.onload = function() {
+        console.log("onload");
     }
 
     const ITEMS = [

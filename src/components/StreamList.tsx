@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import StreamItem from "./StreamItem";
 import {IStream} from "../interfaces";
+import {CONSTANTS} from "../config";
 
 
 
@@ -9,7 +10,7 @@ const StreamList = () => {
     const [streams, setStreams] = useState<IStream[]>([]);
 
     useEffect(() => {
-        fetch('http://localhost:8080/streams/')
+        fetch(CONSTANTS.domain + CONSTANTS.streams)
             .then(response => response.json())
             .then(list => {
                 if (list.error) {
