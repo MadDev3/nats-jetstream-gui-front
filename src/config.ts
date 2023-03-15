@@ -3,4 +3,5 @@ export const CONSTANTS = {
     streams: 'api/streams/',
     streamInfo: 'api/stream_info/',
     read: 'api/read/',
+    ws: 'localhost:8080',
 };

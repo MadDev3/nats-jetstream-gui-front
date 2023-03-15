@@ -12,6 +12,7 @@ import {
     Legend,
 } from 'chart.js';
 import {IData, IGraphic, IItem} from "../interfaces";
+import {CONSTANTS} from "../config";
 
 ChartJS.register(
     CategoryScale,
@@ -29,7 +30,7 @@ const Main = () => {
     const [graphic, setGraphic] = useState<IGraphic[]>([]);
 
     let sock: any = null;
-    let wsuri = "ws://localhost:8080/ws/";
+    let wsuri = `ws://${CONSTANTS.ws}/ws/`;
 
     useEffect(() => {
         sock = new WebSocket(wsuri);

@@ -10,6 +10,7 @@ const StreamInfoPage = () => {
 
     const [subjects, setSubjects] = useState<string[]>(['subj']);
     const [message, setMessage] = useState<IMessage>();
+    const [messageContent, setMessageContent] = useState('');
     const [stream, setStream] = useState<IStreamInfo>(
         {
             "config": {
@@ -57,8 +58,10 @@ const StreamInfoPage = () => {
             .then(response => response.json())
             .then(message => {
                 if (message.error) {
+                    setMessageContent('Error: ' + message.error);
                     return;
                 }
+                setMessageContent(message.data)
                 setMessage(message.response);
             });
     }
@@ -73,7 +76,7 @@ const StreamInfoPage = () => {
 
     const spoilers = [
         {title: 'Information', content: <pre>{JSON.stringify(stream, null, 2)}</pre>},
-        {title: 'Read message', content: <ReadSendMessage readSendMessage={readMessage} messageData={message?.data} subjects={subjects} dropdown={true} type={'Read'} />},
+        {title: 'Read message', content: <ReadSendMessage readSendMessage={readMessage} messageData={messageContent} subjects={subjects} dropdown={true} type={'Read'} />},
         {title: 'Send message', content: <ReadSendMessage dropdown={false} type={'Send'} />},
     ]
     const [spoilersShow, setSpoilersShow] = useState([false, false, false]);
