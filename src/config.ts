@@ -1,7 +1,7 @@
 export const CONSTANTS = {
-    domain: 'http://localhost:8080/',
+    domain: 'http://pc.r-morozov.ru/',
     streams: 'api/streams/',
     streamInfo: 'api/stream_info/',
     read: 'api/read/',
-    ws: 'localhost:8080',
+    ws: 'pc.r-morozov.ru',
 };
