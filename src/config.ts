@@ -1,5 +1,5 @@
 export const CONSTANTS = {
-    domain: 'http://window.location.host:80/',
+    domain: 'http://'+ window.location.host,
     // domain: 'http://pc.r-morozov.ru/',
     streams: 'api/streams/',
     streamInfo: 'api/stream_info/',
@@ -8,5 +8,5 @@ export const CONSTANTS = {
     consumers: 'api/consumers/',
     deleteConsumers: 'api/delete_consumer/',
     // ws: 'pc.r-morozov.ru',
-    ws: 'window.location.host:80',
+    ws: window.location.host,
 };
