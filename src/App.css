@@ -244,6 +244,8 @@ button {
     border-radius: 5px;
     height: 38px;
     padding: 0 15px;
+    display: flex;
+    align-items: center;
 }
 
 .read_message label {
@@ -282,4 +284,31 @@ button {
     padding: 20px;
     margin-bottom: 10px;
     border-radius: 5px;
+}
+
+.spinner {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(90deg);
+}
+
+.spinner:after {
+    animation: changeContent .8s linear infinite;
+    display: block;
+    content: "⠋";
+    font-size: 40px;
+}
+
+@keyframes changeContent {
+    10% { content: "⠙"; }
+    20% { content: "⠹"; }
+    30% { content: "⠸"; }
+    40% { content: "⠼"; }
+    50% { content: "⠴"; }
+    60% { content: "⠦"; }
+    70% { content: "⠧"; }
+    80% { content: "⠇"; }
+    90% { content: "⠏"; }
 }

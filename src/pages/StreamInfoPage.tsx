@@ -6,6 +6,9 @@ import {IMessage, IReadOptions, IStreamInfo} from "../interfaces";
 import ReadSendMessage from "../components/ReadSendMessage";
 import {CONSTANTS} from "../config";
 import ConsumerItem from "../components/ConsumerItem";
+import Preloader from "../components/Preloader";
+import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 
 interface IConsumerInfo {
     name: string;
@@ -19,8 +22,13 @@ const StreamInfoPage = () => {
     const [subjects, setSubjects] = useState<string[]>(['subj']);
     const [message, setMessage] = useState<IMessage>();
     const [messageContent, setMessageContent] = useState('');
+    const [data, setData] = useState('');
     const [stream, setStream] = useState<IStreamInfo>();
     const [consumers, setConsumers] = useState<IConsumerInfo[]>([]);
+    const [preloader, setPreloader] = useState<any>('Send');
+    const [isDisable, setIsDisable] = useState(false);
+    const [show, setShow] = useState(false);
+    const [error, setError] = useState('');
 
     function showSpoiler(index: number) {
         let spoilersArr = [...spoilersShow];
@@ -29,7 +37,6 @@ const StreamInfoPage = () => {
     }
 
     const deleteConsumer = (name: string) => {
-        //let index = consumers.indexOf(name);
         let searchConsumer = consumers.find(consumer => consumer.name === name);
         if (!searchConsumer) {
             return;
@@ -58,10 +65,23 @@ const StreamInfoPage = () => {
     }
 
     const sendMessage = (options: IReadOptions) => {
-        fetch(`${CONSTANTS.domain + CONSTANTS.read}?subject=${options.subject}&message=${options.message}`)
+        setPreloader(<Preloader />);
+        setIsDisable(true);
+        let form = new FormData();
+        form.append('subject', options.subject);
+        form.append('data', data);
+        fetch(`${CONSTANTS.domain + CONSTANTS.send}`, {
+            method: 'POST',
+            body: form
+        })
             .then(response => response.json())
             .then(message => {
-                console.log(message);
+                if (message.error) {
+                    setShow(true);
+                    setError(message.error)
+                }
+                setIsDisable(false);
+                setPreloader('Send');
             });
     }
 
@@ -77,10 +97,30 @@ const StreamInfoPage = () => {
         )
     })
 
+    const setDataMessage = (value: string) => {
+        setData(value);
+    }
+
     const spoilers = [
         {title: 'Information', content: <pre>{JSON.stringify(stream, null, 2)}</pre>},
-        {title: 'Read message', content: <ReadSendMessage readSendMessage={readMessage} messageData={messageContent} subjects={subjects} dropdown={true} type={'Read'} />},
-        {title: 'Send message', content: <ReadSendMessage dropdown={false} type={'Send'} />},
+        {title: 'Read message', content: <ReadSendMessage
+                setData={setDataMessage}
+                readSendMessage={readMessage}
+                messageData={messageContent}
+                subjects={subjects}
+                dropdown={true}
+                type={'Read'}
+                btnContent={'Read'}
+            />},
+        {title: 'Send message', content: <ReadSendMessage
+                setData={setDataMessage}
+                readSendMessage={sendMessage}
+                messageData={data}
+                dropdown={false}
+                type={'Send'}
+                btnContent={preloader}
+                isDisable={isDisable}
+            />},
         {title: 'Consumers', content: consumersList},
     ]
     const [spoilersShow, setSpoilersShow] = useState([false, false, false]);
@@ -138,6 +178,12 @@ const StreamInfoPage = () => {
             <main>
                 <LeftBar/>
                 <div className='main'>
+                    {show &&
+                        <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+                            <Alert.Heading>You got an error!</Alert.Heading>
+                            <p>{error}</p>
+                        </Alert>
+                    }
                     <div className="spoiler-group">
                     {spoilerList}
                     </div>

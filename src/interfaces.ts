@@ -1,3 +1,5 @@
+import {ReactElement, ReactHTML} from "react";
+
 export interface IMessage {
     subject: string;
     data: string;
@@ -69,9 +71,12 @@ export interface IStreamInfo {
 export interface IReadSendMessage {
     dropdown: boolean;
     type: string;
+    btnContent?: string | ReactElement;
     subjects?: string[];
     messageData?: string;
     readSendMessage?: (options: IReadOptions) => void;
+    setData: (value: string) => void;
+    isDisable?: boolean;
 }
 
 export interface IReadOptions {

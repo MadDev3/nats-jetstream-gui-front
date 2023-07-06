@@ -34,16 +34,23 @@ const ReadSendMessage = (props: IReadSendMessage) => {
                     placeholder='Enter subject...'
                     id='subject'
                 />
-                <input
+                <button
+                    disabled={props.isDisable}
                     onClick={() => props.readSendMessage?.({'subject': subject})}
                     className="read_btn"
-                    type={"button"}
-                    value={props.type}
-                />
+                >
+                    {props.btnContent}
+                </button>
             </div>
             <label htmlFor='message'>Message (in base64):</label>
-            <textarea value={props.messageData} readOnly={props.type === 'Read'} className='read_text' rows={4} id='message'>
-
+            <textarea
+                onChange={(e) => props.setData(e.target.value)}
+                value={props.messageData}
+                readOnly={props.type === 'Read'}
+                className='read_text'
+                rows={4}
+                id='message'
+            >
             </textarea>
         </div>
     );
