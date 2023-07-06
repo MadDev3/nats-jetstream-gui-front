@@ -5,47 +5,22 @@ import {useParams} from "react-router-dom";
 import {IMessage, IReadOptions, IStreamInfo} from "../interfaces";
 import ReadSendMessage from "../components/ReadSendMessage";
 import {CONSTANTS} from "../config";
+import ConsumerItem from "../components/ConsumerItem";
+
+interface IConsumerInfo {
+    name: string;
+    info: any;
+}
 
 const StreamInfoPage = () => {
+
+    const params = useParams();
 
     const [subjects, setSubjects] = useState<string[]>(['subj']);
     const [message, setMessage] = useState<IMessage>();
     const [messageContent, setMessageContent] = useState('');
-    const [stream, setStream] = useState<IStreamInfo>(
-        {
-            "config": {
-                "name":"ins-ca",
-                "subjects":["ins-ca.\u003e"],
-                "retention":"workqueue",
-                "max_consumers":-1,
-                "max_msgs":-1,
-                "max_bytes":-1,
-                "discard":"old",
-                "max_age":0,
-                "max_msgs_per_subject":-1,
-                "max_msg_size":1048576,
-                "storage":"file",
-                "num_replicas":1,
-                "duplicate_window":120000000000,
-                "allow_direct":false,
-                "mirror_direct":false
-            },
-            "created":"2023-02-21T14:49:35.423283761Z",
-            "state": {
-                "messages":0,
-                "bytes":0,
-                "first_seq":1,
-                "first_ts":"1970-01-01T00:00:00Z",
-                "last_seq":0,
-                "last_ts":"0001-01-01T00:00:00Z",
-                "consumer_count":1,
-                "deleted":null,
-                "num_deleted":0,
-                "num_subjects":0,
-                "subjects":null
-            }
-        }
-    );
+    const [stream, setStream] = useState<IStreamInfo>();
+    const [consumers, setConsumers] = useState<IConsumerInfo[]>([]);
 
     function showSpoiler(index: number) {
         let spoilersArr = [...spoilersShow];
@@ -53,15 +28,31 @@ const StreamInfoPage = () => {
         setSpoilersShow(spoilersArr);
     }
 
+    const deleteConsumer = (name: string) => {
+        //let index = consumers.indexOf(name);
+        let searchConsumer = consumers.find(consumer => consumer.name === name);
+        if (!searchConsumer) {
+            return;
+        }
+        let index = consumers.indexOf(searchConsumer)
+        if (index === -1) {
+            return
+        }
+        let arr = [...consumers];
+        arr.splice(index, 1);
+        setConsumers(arr);
+    }
+
     const readMessage = (options: IReadOptions) => {
         fetch(`${CONSTANTS.domain + CONSTANTS.read}?subject=${options.subject}`)
             .then(response => response.json())
             .then(message => {
+                console.log(message)
                 if (message.error) {
                     setMessageContent('Error: ' + message.error);
                     return;
                 }
-                setMessageContent(message.data)
+                setMessageContent(message.response.data)
                 setMessage(message.response);
             });
     }
@@ -74,10 +65,23 @@ const StreamInfoPage = () => {
             });
     }
 
+    const consumersList = consumers.map(function (consumerName, index) {
+        return (
+            <ConsumerItem
+                deleteConsumer={deleteConsumer}
+                streamName={params.streamName}
+                key={index}
+                consumerName={consumerName.name}
+                consumerInfo={consumerName.info}
+            />
+        )
+    })
+
     const spoilers = [
         {title: 'Information', content: <pre>{JSON.stringify(stream, null, 2)}</pre>},
         {title: 'Read message', content: <ReadSendMessage readSendMessage={readMessage} messageData={messageContent} subjects={subjects} dropdown={true} type={'Read'} />},
         {title: 'Send message', content: <ReadSendMessage dropdown={false} type={'Send'} />},
+        {title: 'Consumers', content: consumersList},
     ]
     const [spoilersShow, setSpoilersShow] = useState([false, false, false]);
     const spoilerList = spoilers.map(function (spoiler, index) {
@@ -99,8 +103,6 @@ const StreamInfoPage = () => {
         );
     })
 
-    const params = useParams();
-
     useEffect(() => {
         fetch(`${CONSTANTS.domain + CONSTANTS.streamInfo}?stream=${params.streamName}`)
             .then(response => response.json())
@@ -112,6 +114,22 @@ const StreamInfoPage = () => {
                 setSubjects(subjects);
                 setStream(stream.response);
             });
+        fetch(`${CONSTANTS.domain + CONSTANTS.consumers}?stream=${params.streamName}`)
+            .then(response => response.json())
+            .then(consumers => {
+                if (consumers.error) {
+                    return
+                }
+                let consumersInfo: IConsumerInfo[] = [];
+                consumers.response.forEach(function (consumer: any, i: number) {
+                    let consumerInfo = {
+                        name: consumer.name,
+                        info: consumer
+                    }
+                    consumersInfo.push(consumerInfo);
+                });
+                setConsumers([...consumersInfo]);
+            })
     }, [params.streamName])
 
     return (

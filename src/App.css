@@ -195,6 +195,7 @@ button {
     height:60px;
     transform: rotate(-90deg);
     transition: 0.3s;
+    cursor: pointer;
 }
 
 .arrow-show {
@@ -255,5 +256,30 @@ button {
     resize: none;
     color: white;
     padding: 10px;
+    border-radius: 5px;
+}
+
+.consumer {
+    border: 1px solid #212529;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.cross {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.consumer-info {
+    border: 1px solid #212529;
+    border-top: none;
+    padding: 20px;
+    margin-bottom: 10px;
     border-radius: 5px;
 }

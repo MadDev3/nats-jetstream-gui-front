@@ -78,3 +78,9 @@ export interface IReadOptions {
     subject: string;
     message?: string;
 }
+
+export interface IArrow {
+    width: number;
+    isShow: boolean;
+    show?: () => void;
+}
